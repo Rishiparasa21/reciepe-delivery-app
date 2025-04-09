@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js" async defer></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #333; /* Dark text */
+            background-color: #f9f9f9; /* Light, warm background */
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            color: #1e3932; /* Deep green for headings */
+            margin-bottom: 15px;
+        }
+
+        #main-title-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #main-title {
+            color: white;
+            font-size: 2.5em;
+            background-color: #1e3932; /* Deep green for main title */
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        #recipe-list, #cart, #checkout-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        #recipe-list div {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0; /* Light gray border */
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        #recipe-list div:hover {
+            transform: translateY(-5px);
+        }
+
+        #recipe-list img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        #recipe-list .order-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        #recipe-list .order-button:hover {
+            background-color: #3e8e41;
+        }
+
+        #cart-items {
+            list-style: none;
+            padding: 0;
+        }
+
+        #cart-items li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0; /* Very light gray border */
+        }
+
+        #cart-items li:last-child {
+            border-bottom: none;
+        }
+
+        #cart-items img {
+            max-width: 60px;
+            height: auto;
+            margin-right: 15px;
+            border-radius: 4px;
+        }
+
+        #cart-items button {
+            background-color: #d32f2f; /* Dark red for remove */
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #cart-items button:hover {
+            background-color: #b32828;
+        }
+
+        #checkout-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        #checkout-form input, #checkout-form textarea {
+            width: calc(100% - 22px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0; /* Light gray border */
+            border-radius: 5px;
+        }
+
+        #checkout-form button {
+            background-color: #1e3932; /* Deep green for checkout */
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #checkout-form button:hover {
+            background-color: #18312a;
+        }
+
+        /* Style for the "Show Instructions" button */
+        #recipe-list button:not(.order-button) {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        #recipe-list button:not(.order-button):hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Style for the "Checkout" button */
+        #checkout-button {
+            background-color: #1e3932; /* Deep green for checkout */
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #checkout-button:hover {
+            background-color: #18312a;
+        }
+
+        @media (max-width: 768px) {
+            #main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="main-title-container">
+        <h1 id="main-title">Recipe Delivery</h1>
+    </div>
+
+    <div id="main-container">
+        <div id="recipe-list">
+            <h1>Recipes</h1>
+        </div>
+
+        <div id="cart">
+            <h2>Your Order</h2>
+            <ul id="cart-items"></ul>
+            <p>Total: $<span id="total-price">0.00</span></p>
+            <button id="checkout-button" onclick="showCheckoutForm()">Checkout</button>
+        </div>
+
+        <div id="checkout-form">
+            <h2>Checkout</h2>
+            <form id="delivery-form">
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" placeholder="Enter your name"><br><br>
+
+                <label for="address">Address:</label><br>
+                <textarea id="address" name="address" placeholder="Enter your address"></textarea><br><br>
+
+                <label for="phone">Phone:</label><br>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number"><br><br>
+
+                <button type="button" onclick="placeOrder()">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        window.orderItems = JSON.parse(localStorage.getItem('orderItems')) || {};
+        updateCartDisplay();
+
+        fetch('/recipes')
+            .then(response => response.json())
+            .then(recipes => {
+                const recipeList = document.getElementById('recipe-list');
+
+                if (recipes && Array.isArray(recipes)) {
+                    recipes.forEach(recipe => {
+                        const recipeDiv = document.createElement('div');
+                        recipeDiv.innerHTML = `
+                            <h2>${recipe.name}</h2>
+                            <img src="${recipe.image_url}" alt="${recipe.name} Image" width="200"><br>
+                            <button onclick="showInstructions(${recipe.id})">Show Instructions</button>
+                            <button class="order-button" onclick="addToOrder(${recipe.id})">Order Now</button>
+                            <div id="instructions-${recipe.id}" style="display:none;">
+                                <div class="recipe-details">
+                                    <div class="instructions">
+                                        <p>${recipe.instructions}</p>
+                                    </div>
+                                    <div class="ingredients">
+                                        <h3>Ingredients:</h3>
+                                        <ol id="ingredients-list-${recipe.id}"></ol>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        recipeList.appendChild(recipeDiv);
+
+                        const ingredientsList = document.getElementById(`ingredients-list-${recipe.id}`);
+                        const ingredients = recipe.ingredients.split(', ');
+                        ingredients.forEach(ingredient => {
+                            const li = document.createElement('li');
+                            li.textContent = ingredient;
+                            ingredientsList.appendChild(li);
+                        });
+
+                        const instructionsDiv = document.querySelector(`#instructions-${recipe.id} .instructions p`);
+                        if (recipe.instructions.includes('#') || recipe.instructions.includes('*') || recipe.instructions.includes('>')) {
+                            const converter = new showdown.Converter();
+                            const htmlInstructions = converter.makeHtml(recipe.instructions);
+                            instructionsDiv.innerHTML = htmlInstructions;
+                        }
+                    });
+                } else {
+                    recipeList.innerHTML = "<p>No recipes found.</p>";
+                }
+            })
+            .catch(error => console.error("Error fetching recipes:", error));
+
+        function showInstructions(recipeId) {
+            const instructionsDiv = document.getElementById(`instructions-${recipeId}`);
+            if (instructionsDiv) {
+                instructionsDiv.style.display = instructionsDiv.style.display === "none" ? "block" : "none";
+            }
+        }
+
+        function addToOrder(recipeId) {
+            console.log("Recipe ID added to order:", recipeId);
+            if (!window.orderItems) {
+                window.orderItems = {};
+            }
+            if (window.orderItems[recipeId]) {
+                window.orderItems[recipeId]++;
+            } else {
+                window.orderItems[recipeId] = 1;
+            }
+            console.log("Current order:", window.orderItems);
+
+            localStorage.setItem('orderItems', JSON.stringify(window.orderItems));
+
+            fetch(`/recipes`)
+                .then(response => response.json())
+                .then(recipes => {
+                    const recipe = recipes.find(recipe => recipe.id === recipeId);
+                    if (recipe) {
+                        updateCartDisplay();
+                    }
+                })
+                .catch(error => console.error("Error fetching recipe:", error));
+
+            alert("Recipe added to order!");
+        }
+
+        function removeItem(recipeId) {
+            if (window.orderItems && window.orderItems[recipeId]) {
+                delete window.orderItems[recipeId];
+                localStorage.setItem('orderItems', JSON.stringify(window.orderItems));
+                updateCartDisplay();
+            }
+        }
+
+        function updateCartDisplay() {
+            fetch('/recipes')
+                .then(response => response.json())
+                .then(recipes => {
+                    const cartItems = document.getElementById('cart-items');
+                    cartItems.innerHTML = '';
+                    let totalPrice = 0;
+
+                    for (const recipeId in window.orderItems) {
+                        const orderedRecipe = recipes.find(r => r.id === parseInt(recipeId));
+                        if (orderedRecipe) {
+                            const quantity = window.orderItems[recipeId];
+                            const li = document.createElement('li');
+                            li.className = 'cart-item';
+                            li.innerHTML = `
+                                <img src="${orderedRecipe.image_url}" alt="${orderedRecipe.name} Image">
+                                <span>${orderedRecipe.name} (x${quantity})</span>
+                                <button onclick="removeItem(${orderedRecipe.id})">Remove</button>
+                            `;
+                            cartItems.appendChild(li);
+                            totalPrice += orderedRecipe.price * quantity;
+                        }
+                    }
+                    document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+                })
+                .catch(error => console.error("Error fetching recipe:", error));
+        }
+
+        function showCheckoutForm() {
+            document.getElementById('checkout-form').style.display = 'block';
+        }
+
+        function placeOrder() {
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+
+            fetch('/place-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    address,
+                    phone,
+                    orderItems: window.orderItems
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                alert('Order placed successfully!');
+                document.getElementById('checkout-form').style.display = 'none';
+                window.orderItems = {};
+                localStorage.removeItem('orderItems');
+                updateCartDisplay();
+            })
+            .catch(error => {
+                console.error('Error placing order:', error);
+                alert('Error placing order.');
+            });
+        }
+    </script>
+</body>
+</html>
