@@ -30,7 +30,13 @@ This is a web application for delivering recipes, built with HTML, CSS, JavaScri
 3.  **Set up the database:**
     * Install PostgreSQL.
     * Create a database named `recipe_delivery`.
-    * Run the provided SQL scripts (if you have them) to create the tables.
+    * Run the following SQL script using pgAdmin or the `psql` command-line tool:
+
+        ```bash
+        psql -U postgres -d recipe_delivery -f database/create_tables.sql
+        ```
+
+        (Replace `your_username` with your PostgreSQL username.)
 4.  **Run the backend (if applicable):**
     * Install any required Python dependencies (if you have python backend).
     * Run the backend server.
