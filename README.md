@@ -21,7 +21,7 @@ This is a web application for delivering recipes, built with HTML, CSS, JavaScri
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/Rishiparasa21/recipe-delivery-app.git
+    git clone [https://github.com/Rishiparasa21/recipe-delivery-app.git](https://github.com/Rishiparasa21/recipe-delivery-app.git)
     ```
 2.  **Navigate to the project directory:**
     ```bash
@@ -38,10 +38,21 @@ This is a web application for delivering recipes, built with HTML, CSS, JavaScri
 
         (Replace `your_username` with your PostgreSQL username.)
 4.  **Run the backend (if applicable):**
-    * Install any required Python dependencies (if you have python backend).
-    * Run the backend server.
+    * Navigate to the backend directory:
+      ```bash
+      cd backend
+      ```
+    * **Install required Python dependencies:**
+      ```bash
+      pip install -r ../requirements.txt
+      ```
+    * Run the backend server:
+      ```bash
+      python main.py  # Assuming your main backend file is main.py - ADJUST IF DIFFERENT
+      ```
 5.  **Open the frontend:**
     * Open `frontend/index.html` in your web browser.
+
 
 ## Notes
 
